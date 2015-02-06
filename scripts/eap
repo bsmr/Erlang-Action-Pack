@@ -30,6 +30,11 @@ setup MODE: MODE in erlang
 EOT
 }
 
+function action_setup_modules {
+git submodule init
+git submodule update
+}
+
 function action_setup_erlang {
 if [ ! -d "${EAP_SRC_ERLOTP}" ] ; then
 	erre "can not change to Erlang/OTP source directory"
@@ -82,6 +87,10 @@ echo TBD
 function action_setup {
 MODE="$1"
 case ${MODE} in
+"modules")
+	shift
+	action_setup_modules $*
+	;;
 "erlang")
 	shift
 	action_setup_erlang $*
