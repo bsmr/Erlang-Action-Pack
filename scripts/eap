@@ -1,0 +1,124 @@
+#!/bin/bash
+
+DEBUG="yes"
+
+# locate the directory, where this script lives in
+SCRIPT_NAME=$(basename "$0")
+SCRIPT_PATH=$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)
+
+EAP_MODULES=$(cd -P "${SCRIPT_PATH}/../modules"	2>/dev/null && pwd -P)
+EAP_LOGS=$(cd -P "${SCRIPT_PATH}/../logs"	2>/dev/null && pwd -P)
+EAP_SRC_ERLOTP=$(cd -P "${EAP_MODULES}/otp"	2>/dev/null && pwd -P)
+
+# =====================================================================
+# eap - Erlang Action Pack main script
+# =====================================================================
+
+function erre {
+echo "Error: $*!" >&2
+}
+
+function action_usage {
+cat <<EOT
+usage: eap [ setup MODE | help ]
+EOT
+}
+
+function action_help {
+cat <<EOT
+setup MODE: MODE in erlang
+EOT
+}
+
+function action_setup_erlang {
+if [ ! -d "${EAP_SRC_ERLOTP}" ] ; then
+	erre "can not change to Erlang/OTP source directory"
+	exit 1
+fi
+
+echo "Setup Erlang/OTP:"
+
+pushd "${EAP_SRC_ERLOTP}"
+
+LANG="C"
+ERL_TOP=$(pwd)
+PREFIX="${HOME}/.eap"
+
+(
+	git reset --hard
+
+	"./otp_build" save_bootstrap
+	"./otp_build" autoconf
+	"./otp_build" configure --prefix="${PREFIX}"
+
+	for ACT in "all" "install" "clean"
+	do
+		make ${ACT}
+	done
+
+	PATH="${PREFIX}/bin:${ERL_TOP}/bin:${PATH}"
+
+	"./otp_build" remove_prebuilt_files
+	"./otp_build" autoconf
+	"./otp_build" configure --prefix="${PREFIX}"
+
+	for ACT in "all" "install" "docs" "install-docs" "clean"
+	do
+		make ${ACT}
+	done
+
+	git reset --hard
+
+) 2>&1 | tee "${EAP_LOGS}/setup-erlang-otp.log"
+
+popd
+
+}
+
+function action_setup_elixir {
+echo TBD
+}
+
+function action_setup {
+MODE="$1"
+case ${MODE} in
+"erlang")
+	shift
+	action_setup_erlang $*
+	;;
+"elixir")
+	shift
+	action_setup_elixir $*
+	;;
+*)
+	erre "unknown setup option \"${MODE}\""
+	exit 1
+	;;
+esac
+}
+
+# =====================================================================
+# main entry point
+# =====================================================================
+
+ARG1="$1"
+
+case ${ARG1} in
+"setup")
+	shift
+	action_setup $*
+	;;
+"help"|"-h"|"--help")
+	action_help
+	;;
+*)
+	action_usage
+	exit 1
+	;;
+esac
+
+exit 0
+
+# #####################################################################
+# End Of File
+# #####################################################################

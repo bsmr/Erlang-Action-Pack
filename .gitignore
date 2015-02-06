@@ -1,0 +1,6 @@
+# BOF
+
+# ignore log files
+/logs/*
+
+# EOF
