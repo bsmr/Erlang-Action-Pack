@@ -1,0 +1,9 @@
+[submodule "modules/otp"]
+	path = modules/otp
+	url = https://github.com/erlang/otp.git
+[submodule "modules/elixir"]
+	path = modules/elixir
+	url = https://github.com/elixir-lang/elixir.git
+[submodule "modules/ex_doc"]
+	path = modules/ex_doc
+	url = https://github.com/elixir-lang/ex_doc.git
