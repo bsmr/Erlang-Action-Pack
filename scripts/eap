@@ -137,6 +137,18 @@ case ${MODE} in
 esac
 }
 
+function action_environment {
+PATH="${HOME}/.eap/bin:${PATH}"
+
+if [ -z "${MANPATH}" ]
+then
+	MANPATH="${HOME}/.eap/lib/erlang/man:/usr/share/man:/usr/local/share/man"
+else
+	MANPATH="${HOME}/.eap/lib/erlang/man:${MANPATH}"
+fi
+export PATH MANPATH
+}
+
 # =====================================================================
 # main entry point
 # =====================================================================
@@ -147,6 +159,11 @@ case ${ARG1} in
 "setup")
 	shift
 	action_setup $*
+	;;
+"env"|"environment")
+	shift
+	action_environment $*
+	return
 	;;
 "help"|"-h"|"--help")
 	action_help

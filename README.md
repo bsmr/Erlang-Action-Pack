@@ -12,3 +12,18 @@ A complete package of [Erlang/OTP][], [Elixir][], [Cowboy][], and [Phoenix][] to
 [erlang.mk]:	https://github.com/ninenines/erlang.mk
 [Phoenix]:	https://github.com/phoenixframework/phoenix
 
+## Setup
+
+```bash
+./scripts/eap setup modules
+./scripts/eap setup erlang
+./scripts/eap setup elixir
+```
+
+## Usage
+
+```bash
+source ./scripts/eap env
+```
+
+This call modifies the ```PATH``` and ```MANPATH``` environment variables.
