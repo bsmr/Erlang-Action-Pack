@@ -25,6 +25,14 @@ source ~/.eap/etc/environment
 
 This call modifies the ```PATH``` and ```MANPATH``` environment variables.
 
+## Links
+
+ * Project Web Sites
+   * [Erlang/OTP](http://erlang.org)
+   * [Elixir](http://elixir-lang.org/)
+ * Editor Plugins
+   * [Emacs major mode for Elixir](https://github.com/elixir-lang/emacs-elixir)
+   * [Vim configuration files for Elixir](https://github.com/elixir-lang/vim-elixir)
 
 [Erlang/OTP]:	https://github.com/erlang/otp
 [Elixir]:	https://github.com/elixir-lang/elixir
