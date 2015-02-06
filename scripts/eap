@@ -11,6 +11,9 @@ EAP_LOGS=$(cd -P "${SCRIPT_PATH}/../logs"	2>/dev/null && pwd -P)
 EAP_SRC_ERLOTP=$(cd -P "${EAP_MODULES}/otp"	2>/dev/null && pwd -P)
 EAP_SRC_ELIXIR=$(cd -P "${EAP_MODULES}/elixir"	2>/dev/null && pwd -P)
 
+EAP_BASE="${HOME}/.eap"
+# ${EAP_BASE}
+
 # =====================================================================
 # eap - Erlang Action Pack main script
 # =====================================================================
@@ -27,7 +30,7 @@ EOT
 
 function action_help {
 cat <<EOT
-setup MODE: MODE in modules, erlang, elixir
+setup MODE: MODE in modules, erlang, elixir, eap
 EOT
 }
 
@@ -48,7 +51,7 @@ pushd "${EAP_SRC_ERLOTP}"
 
 LANG="C"
 ERL_TOP=$(pwd)
-PREFIX="${HOME}/.eap"
+PREFIX="${EAP_BASE}"
 
 (
 	git reset --hard
@@ -90,7 +93,7 @@ echo "Setup Elixir:"
 
 pushd "${EAP_SRC_ELIXIR}"
 
-PREFIX="${HOME}/.eap"
+PREFIX="${EAP_BASE}"
 PATH="${PREFIX}/bin:${PATH}"
 
 (
@@ -115,6 +118,42 @@ PATH="${PREFIX}/bin:${PATH}"
 popd
 }
 
+function action_setup_eap {
+
+EAP_ETC="${EAP_BASE}/etc"
+
+if [ ! -d "${EAP_ETC}" ] ; then
+	mkdir -p "${EAP_ETC}"
+fi
+
+EAP_ENV="${EAP_ETC}/environment"
+
+( cat | tee "${EAP_ENV}" ) <<EOT
+# ---------------------------------------------------------------------
+# Erlang Action Pack environment: source me!
+# > source "${EAP_ENV}"
+# ---------------------------------------------------------------------
+
+if [ -z $(echo ${PATH} | grep "${HOME}/.eap/bin") ] ; then
+	PATH="${HOME}/.eap/bin:${PATH}"
+fi
+
+if [ -z "${MANPATH}" ]
+then
+	MANPATH="${HOME}/.eap/lib/erlang/man:/usr/share/man:/usr/local/share/man"
+else
+	MANPATH="${HOME}/.eap/lib/erlang/man:${MANPATH}"
+fi
+
+export PATH MANPATH
+
+# ---------------------------------------------------------------------
+# End Of File
+# ---------------------------------------------------------------------
+EOT
+
+}
+
 function action_setup {
 MODE="$1"
 case ${MODE} in
@@ -130,23 +169,15 @@ case ${MODE} in
 	shift
 	action_setup_elixir $*
 	;;
+"eap")
+	shift
+	action_setup_eap $*
+	;;
 *)
 	erre "unknown setup option \"${MODE}\""
 	exit 1
 	;;
 esac
-}
-
-function action_environment {
-PATH="${HOME}/.eap/bin:${PATH}"
-
-if [ -z "${MANPATH}" ]
-then
-	MANPATH="${HOME}/.eap/lib/erlang/man:/usr/share/man:/usr/local/share/man"
-else
-	MANPATH="${HOME}/.eap/lib/erlang/man:${MANPATH}"
-fi
-export PATH MANPATH
 }
 
 # =====================================================================
@@ -159,11 +190,6 @@ case ${ARG1} in
 "setup")
 	shift
 	action_setup $*
-	;;
-"env"|"environment")
-	shift
-	action_environment $*
-	return
 	;;
 "help"|"-h"|"--help")
 	action_help

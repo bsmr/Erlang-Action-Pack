@@ -18,12 +18,13 @@ A complete package of [Erlang/OTP][], [Elixir][], [Cowboy][], and [Phoenix][] to
 ./scripts/eap setup modules
 ./scripts/eap setup erlang
 ./scripts/eap setup elixir
+./scripts/eap setup eap
 ```
 
 ## Usage
 
 ```bash
-source ./scripts/eap env
+source ~/.eap/etc/environment
 ```
 
 This call modifies the ```PATH``` and ```MANPATH``` environment variables.
