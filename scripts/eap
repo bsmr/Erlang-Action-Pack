@@ -9,6 +9,7 @@ SCRIPT_PATH=$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)
 EAP_MODULES=$(cd -P "${SCRIPT_PATH}/../modules"	2>/dev/null && pwd -P)
 EAP_LOGS=$(cd -P "${SCRIPT_PATH}/../logs"	2>/dev/null && pwd -P)
 EAP_SRC_ERLOTP=$(cd -P "${EAP_MODULES}/otp"	2>/dev/null && pwd -P)
+EAP_SRC_ELIXIR=$(cd -P "${EAP_MODULES}/elixir"	2>/dev/null && pwd -P)
 
 # =====================================================================
 # eap - Erlang Action Pack main script
@@ -26,7 +27,7 @@ EOT
 
 function action_help {
 cat <<EOT
-setup MODE: MODE in erlang
+setup MODE: MODE in modules, erlang, elixir
 EOT
 }
 
@@ -77,11 +78,41 @@ PREFIX="${HOME}/.eap"
 ) 2>&1 | tee "${EAP_LOGS}/setup-erlang-otp.log"
 
 popd
-
 }
 
 function action_setup_elixir {
-echo TBD
+if [ ! -d "${EAP_SRC_ELIXIR}" ] ; then
+	erre "can not change to Elixir source directory"
+	exit 1
+fi
+
+echo "Setup Elixir:"
+
+pushd "${EAP_SRC_ELIXIR}"
+
+PREFIX="${HOME}/.eap"
+PATH="${PREFIX}/bin:${PATH}"
+
+(
+	git reset --hard
+	
+	for ACT in "clean" "test"
+	do
+		make ${ACT}
+	done
+
+	cd "../ex_doc" && ../elixir/bin/mix do deps.get, compile && cd "../elixir" && make "docs"
+	
+	for ACT in "PREFIX=${PREFIX} install" "clean"
+	do
+		make ${ACT}
+	done
+
+	git reset --hard
+	
+) 2>&1 | tee "${EAP_LOGS}/setup-elixir.log"
+
+popd
 }
 
 function action_setup {
