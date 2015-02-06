@@ -99,14 +99,16 @@ PATH="${PREFIX}/bin:${PATH}"
 (
 	git reset --hard
 	
-	for ACT in "clean" "test"
+	#for ACT in "clean" "test"
+	for ACT in "clean" "test" "PREFIX=${PREFIX} install"
 	do
 		make ${ACT}
 	done
 
 	cd "../ex_doc" && ../elixir/bin/mix do deps.get, compile && cd "../elixir" && make "docs"
 	
-	for ACT in "PREFIX=${PREFIX} install" "clean"
+	#for ACT in "PREFIX=${PREFIX} install" "clean"
+	for ACT in "clean"
 	do
 		make ${ACT}
 	done
