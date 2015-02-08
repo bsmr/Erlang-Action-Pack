@@ -6,10 +6,11 @@ DEBUG="yes"
 SCRIPT_NAME=$(basename "$0")
 SCRIPT_PATH=$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)
 
-EAP_MODULES=$(cd -P "${SCRIPT_PATH}/../modules"	2>/dev/null && pwd -P)
-EAP_LOGS=$(cd -P "${SCRIPT_PATH}/../logs"	2>/dev/null && pwd -P)
-EAP_SRC_ERLOTP=$(cd -P "${EAP_MODULES}/otp"	2>/dev/null && pwd -P)
-EAP_SRC_ELIXIR=$(cd -P "${EAP_MODULES}/elixir"	2>/dev/null && pwd -P)
+EAP_MODULES=$(cd -P "${SCRIPT_PATH}/../modules"		2>/dev/null && pwd -P)
+EAP_LOGS=$(cd -P "${SCRIPT_PATH}/../logs"		2>/dev/null && pwd -P)
+EAP_SRC_ERLOTP=$(cd -P "${EAP_MODULES}/otp"		2>/dev/null && pwd -P)
+EAP_SRC_ELIXIR=$(cd -P "${EAP_MODULES}/elixir"		2>/dev/null && pwd -P)
+EAP_SRC_PHOENIX=$(cd -P "${EAP_MODULES}/phoenix"	2>/dev/null && pwd -P)
 
 EAP_BASE="${HOME}/.eap"
 # ${EAP_BASE}
@@ -24,13 +25,13 @@ echo "Error: $*!" >&2
 
 function action_usage {
 cat <<EOT
-usage: eap [ setup MODE | help ]
+usage: eap [ setup [ modules | eap | erlang | elixir | phoenix ] | help ]
 EOT
 }
 
 function action_help {
 cat <<EOT
-setup MODE: MODE in modules, erlang, elixir, eap
+setup MODE: MODE in modules, erlang, elixir, eap, phoenix
 EOT
 }
 
@@ -120,6 +121,31 @@ PATH="${PREFIX}/bin:${PATH}"
 popd
 }
 
+function action_setup_phoenix {
+if [ ! -d "${EAP_SRC_PHOENIX}" ] ; then
+	erre "can not change to Phoenix source directory"
+	exit 1
+fi
+
+echo "Setup Phoenix:"
+
+pushd "${EAP_SRC_PHOENIX}"
+
+PREFIX="${EAP_BASE}"
+PATH="${PREFIX}/bin:${PATH}"
+
+(
+	git reset --hard
+	
+	mix do deps.get, compile
+
+	#git reset --hard
+
+) 2>&1 | tee "${EAP_LOGS}/setup-phoenix.log"
+
+popd
+}
+
 function action_setup_eap {
 
 EAP_ETC="${EAP_BASE}/etc"
@@ -163,6 +189,10 @@ case ${MODE} in
 	shift
 	action_setup_modules $*
 	;;
+"eap")
+	shift
+	action_setup_eap $*
+	;;
 "erlang")
 	shift
 	action_setup_erlang $*
@@ -171,9 +201,9 @@ case ${MODE} in
 	shift
 	action_setup_elixir $*
 	;;
-"eap")
+"phoenix")
 	shift
-	action_setup_eap $*
+	action_setup_phoenix $*
 	;;
 *)
 	erre "unknown setup option \"${MODE}\""
