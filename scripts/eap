@@ -24,7 +24,7 @@ echo "Error: $*!" >&2
 
 function action_usage {
 cat <<EOT
-usage: eap [ setup MODE | help ]
+usage: eap [ bootstrap | setup MODE | help ]
 EOT
 }
 
@@ -195,6 +195,19 @@ case ${MODE} in
 esac
 }
 
+function action_bootstrap {
+
+$0 setup dependencies
+$0 setup modules
+$0 setup erlang
+$0 setup eap
+
+source "${HOME}/.eap/etc/environment"
+
+$0 setup elixir
+
+}
+
 # =====================================================================
 # main entry point
 # =====================================================================
@@ -205,6 +218,9 @@ case ${ARG1} in
 "setup")
 	shift
 	action_setup $*
+	;;
+"bootstrap")
+	action_bootstrap
 	;;
 "help"|"-h"|"--help")
 	action_help
