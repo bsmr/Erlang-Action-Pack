@@ -34,6 +34,15 @@ setup MODE: MODE in modules, erlang, elixir, eap
 EOT
 }
 
+function action_setup_dependencies {
+#sudo apt-get update
+sudo apt-get install				\
+	build-essential m4 flex bison		\
+	libncurses5-dev libssl-dev unixodbc-dev	\
+	libglu1-mesa-dev libwxgtk3.0-dev	\
+	default-jdk xsltproc fop libxml2-utils
+}
+
 function action_setup_modules {
 git submodule init
 git submodule update
@@ -159,6 +168,10 @@ EOT
 function action_setup {
 MODE="$1"
 case ${MODE} in
+"dependencies")
+	shift
+	action_setup_dependencies $*
+	;;
 "modules")
 	shift
 	action_setup_modules $*
