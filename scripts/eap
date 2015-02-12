@@ -80,12 +80,12 @@ PREFIX="${EAP_BASE}"
 	"./otp_build" autoconf
 	"./otp_build" configure --prefix="${PREFIX}"
 
-	for ACT in "all" "install" "docs" "install-docs" #"clean"
+	for ACT in "all" "install" "docs" "install-docs" "clean"
 	do
 		make ${ACT}
 	done
 
-	#git reset --hard
+	git reset --hard
 
 ) 2>&1 | tee "${EAP_LOGS}/setup-erlang-otp.log"
 
