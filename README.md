@@ -1,12 +1,14 @@
 # Erlang Action Pack
 
-A complete package of [Erlang/OTP][], [Elixir][], [Cowboy][], and [Phoenix][] to quickly set up a local Web development environment, based on current versions of each package used.
-[Cowboy][] also includes [Ranch][], [Bullet][], [Sheriff][], and [erlang.mk][].
+A complete package of [Erlang/OTP][], [Elixir][], and [Phoenix][] to quickly set up a local Web development environment, based on current versions of each package used.
+
+[Phoenix][] also includes [Cowboy][], and its dependencies.
 
 ## Notes
 
  * Currently only [Erlang/OTP][], and [Elixir][] are installed!
  * No editor plugins will be installed!
+   It is up to You which editor You want to use.
 
 ## Setup
 
