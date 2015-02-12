@@ -25,7 +25,7 @@ echo "Error: $*!" >&2
 
 function action_usage {
 cat <<EOT
-usage: eap [ setup [ modules | eap | erlang | elixir | phoenix ] | help ]
+usage: eap [ bootstrap | setup [ modules | eap | erlang | elixir | phoenix ] | help ]
 EOT
 }
 
@@ -225,6 +225,18 @@ case ${MODE} in
 esac
 }
 
+function action_bootstrap {
+for ACTION in "dependencies" "modules" "erlang" "eap" "elixir"
+do
+	echo "##### ${ACTION}: started..."
+	$0 setup "${ACTION}"
+	if [ "$?" != "0" ] ; then
+		erre "action \"${ACTION}\" failed!"
+		exit 1
+	fi
+done
+}
+
 # =====================================================================
 # main entry point
 # =====================================================================
@@ -235,6 +247,9 @@ case ${ARG1} in
 "setup")
 	shift
 	action_setup $*
+	;;
+"bootstrap")
+	action_bootstrap
 	;;
 "help"|"-h"|"--help")
 	action_help
