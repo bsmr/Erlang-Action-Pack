@@ -7,8 +7,11 @@ A complete package of [Erlang/OTP][], [Elixir][], and [Phoenix][] to quickly set
 ## Notes
 
  * Currently only [Erlang/OTP][], and [Elixir][] are installed!
+ * [Phoenix][] is in it's very early stage, only on the feature branch.
+ * Currently only tested on Ubuntu 14.04 (x86_64, armv7l)
  * No editor plugins will be installed!
    It is up to You which editor You want to use.
+
 
 ## Setup
 
@@ -19,7 +22,10 @@ A complete package of [Erlang/OTP][], [Elixir][], and [Phoenix][] to quickly set
 ./scripts/eap setup eap
 ```
 
+
 ## Usage
+
+After the setup is finished, You can try the following:
 
 ```bash
 source ~/.eap/etc/environment
@@ -27,14 +33,19 @@ source ~/.eap/etc/environment
 
 This call modifies the ```PATH``` and ```MANPATH``` environment variables.
 
+Now ```erl```, ```iex```, and ```mix``` should work.
+
+
 ## Links
 
  * Project Web Sites
-   * [Erlang/OTP](http://erlang.org)
+   * [Erlang/OTP](http://erlang.org/)
    * [Elixir](http://elixir-lang.org/)
+   * [Phoenix](http://www.phoenixframework.org/)
  * Editor Plugins
    * [Emacs major mode for Elixir](https://github.com/elixir-lang/emacs-elixir)
    * [Vim configuration files for Elixir](https://github.com/elixir-lang/vim-elixir)
+   
 
 [Erlang/OTP]:	https://github.com/erlang/otp
 [Elixir]:	https://github.com/elixir-lang/elixir
