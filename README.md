@@ -8,7 +8,7 @@ A complete package of [Erlang/OTP][], [Elixir][], and [Phoenix][] to quickly set
 
  * Currently only [Erlang/OTP][], and [Elixir][] are installed!
  * [Phoenix][] is in it's very early stage, only on the feature branch.
- * Currently only tested on Ubuntu 14.04 (x86_64, armv7l)
+ * Currently only tested on Ubuntu 14.04 (x86_64, armv7l) and Raspbian (Raspberry 2)
  * No editor plugins will be installed!
    It is up to You which editor You want to use.
 
