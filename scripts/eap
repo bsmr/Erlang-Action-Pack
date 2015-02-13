@@ -37,11 +37,28 @@ EOT
 
 function action_setup_dependencies {
 #sudo apt-get update
-sudo apt-get install				\
-	build-essential m4 flex bison		\
-	libncurses5-dev libssl-dev unixodbc-dev	\
-	libglu1-mesa-dev libwxgtk3.0-dev	\
-	default-jdk xsltproc fop libxml2-utils
+sudo apt-get install lsb-release
+RELEASE_ID=$(lsb_release -s -i)
+case "${RELEASE_ID}" in
+"Debian")
+	sudo apt-get install				\
+		build-essential autoconf m4 flex bison	\
+		libncurses5-dev libssl-dev unixodbc-dev	\
+		libglu1-mesa-dev libwxgtk2.8-dev	\
+		default-jdk xsltproc fop libxml2-utils
+	;;
+"Ubuntu"|"Linaro")
+	sudo apt-get install				\
+		build-essential autoconf m4 flex bison	\
+		libncurses5-dev libssl-dev unixodbc-dev	\
+		libglu1-mesa-dev libwxgtk3.0-dev	\
+		default-jdk xsltproc fop libxml2-utils
+	;;
+*)
+	erre "unknown distribution ${RELEASE_ID}"
+	exit 1
+	;;
+esac
 }
 
 function action_setup_modules {
